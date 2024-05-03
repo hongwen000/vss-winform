@@ -52,5 +52,8 @@ namespace vss.Utils
 
         [DllImport("user32.dll")]
         public static extern bool SetWindowPos(nint hWnd, nint hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        [DllImport("user32.dll")]
+        public static extern bool BringWindowToTop(nint hWnd);
     }
 }

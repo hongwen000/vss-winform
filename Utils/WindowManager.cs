@@ -12,7 +12,7 @@ namespace vss.Utils
         private const int WS_EX_TOOLWINDOW = 0x00000080;
         private const int WS_EX_NOACTIVATE = 0x08000000;
         private const uint GA_ROOTOWNER = 3;
-        private const int SW_SHOWNORMAL = 1;
+        private const int SW_SHOW = 5;
         private static readonly nint HWND_TOPMOST = new nint(-1);
         private static readonly nint HWND_NOTOPMOST = new nint(-2);
         private const uint SWP_NOSIZE = 0x0001;
@@ -53,9 +53,10 @@ namespace vss.Utils
             uint dwForeID = NativeInterop.GetWindowThreadProcessId(hForeWnd, nint.Zero);
             uint dwCurID = NativeInterop.GetCurrentThreadId();
             NativeInterop.AttachThreadInput(dwCurID, dwForeID, true);
-            NativeInterop.ShowWindow(hWnd, SW_SHOWNORMAL);
-            NativeInterop.SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-            NativeInterop.SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+            NativeInterop.BringWindowToTop(hWnd);
+            NativeInterop.ShowWindow(hWnd, SW_SHOW);
+            //NativeInterop.SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+            //NativeInterop.SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
             NativeInterop.SetForegroundWindow(hWnd);
             NativeInterop.AttachThreadInput(dwCurID, dwForeID, false);
             return true;
