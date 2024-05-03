@@ -1,13 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using System.IO;
-using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
@@ -21,77 +16,20 @@ namespace vss
 
         private string recent = "";
         private List<IntPtr> windowList;
-
         private bool onlyShowVSCode = true;
-        private NotifyIcon notifyIcon;
-        private ContextMenuStrip trayMenu;
+        private TaskbarManager taskbarManager;
+        private WindowManager windowManager;
+
         public Form1()
         {
             InitializeComponent();
-            windowList = GetWindows();
+            windowManager = new WindowManager();
+            windowList = windowManager.GetWindows();
             UpdateList();
             CenterToScreen();
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
-            // Create a taskbar icon
-            RegisterContextMenuStrip();
-
-            CreateTrayIcon();
-        }
-        private void CreateTrayIcon()
-        {
-            notifyIcon = new NotifyIcon();
-            //notifyIcon.Icon = new Icon(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon.ico"));
-            notifyIcon.Icon = CreateIcon();
-            notifyIcon.Visible = true;
-            notifyIcon.Text = "My Switcher Program";
-            notifyIcon.DoubleClick += (sender, e) => ActivateWindow();
-            // Assign the context menu
-            notifyIcon.ContextMenuStrip = trayMenu;
-            // Clean up the icon when the form is closed
-            FormClosed += (sender, e) => notifyIcon.Dispose();
-        }
-        private void RegisterContextMenuStrip()
-        {
-            trayMenu = new ContextMenuStrip();
-            ToolStripMenuItem exitItem = new ToolStripMenuItem("Exit");
-            exitItem.Click += ExitItem_Click;
-            trayMenu.Items.Add(exitItem);
-
-            ToolStripMenuItem showItem = new ToolStripMenuItem("Show");
-            showItem.Click += ShowItem_Click;
-            trayMenu.Items.Add(showItem);
-        }
-
-        private void ExitItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void ShowItem_Click(object sender, EventArgs e)
-        {
-            this.Show();
-            this.WindowState = FormWindowState.Normal;
-            this.Activate();
-        }
-        private Icon CreateIcon()
-        {
-            int size = 16;
-            Bitmap bitmap = new Bitmap(size, size);
-
-            using (Graphics graphics = Graphics.FromImage(bitmap))
-            {
-                // Set the background color
-                graphics.Clear(Color.White);
-
-                // Draw a black square
-                int padding = 2;
-                int squareSize = size - 2 * padding;
-                graphics.FillRectangle(Brushes.Black, padding, padding, squareSize, squareSize);
-            }
-
-            IntPtr hIcon = bitmap.GetHicon();
-            return Icon.FromHandle(hIcon);
+            taskbarManager = new TaskbarManager(this);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -108,7 +46,7 @@ namespace vss
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == WM_HOTKEY && m.WParam.ToInt32() == HotkeyId)
+            if (m.Msg == NativeInterop.WM_HOTKEY && m.WParam.ToInt32() == HotkeyId)
             {
                 ActivateWindow();
             }
@@ -117,42 +55,27 @@ namespace vss
 
         private void RegisterHotkey()
         {
-            RegisterHotKey(Handle, HotkeyId, MOD_ALT, VK_SPACE);
+            NativeInterop.RegisterHotKey(Handle, HotkeyId, MOD_ALT, VK_SPACE);
         }
 
         private void UnregisterHotkey()
         {
-            UnregisterHotKey(Handle, HotkeyId);
-        }
-
-        private List<IntPtr> GetWindows()
-        {
-            return EnumerateWindows()
-                .Where(hwnd => IsAltTabWindow(hwnd) && GetWindowText(hwnd).Length > 0)
-                .ToList();
+            NativeInterop.UnregisterHotKey(Handle, HotkeyId);
         }
 
         private void UpdateWindowList()
         {
-            windowList = GetWindows();
+            windowList = windowManager.GetWindows();
             UpdateList();
         }
 
-        private Dictionary<string, string> LoadMagicSearches()
-        {
-            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
-            if (File.Exists(configPath))
-            {
-                string json = File.ReadAllText(configPath);
-                return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-            }
-            return new Dictionary<string, string>();
-        }
+
+
         private void UpdateList()
         {
             string search = textBoxSearch.Text;
-            var magicSearches = LoadMagicSearches();
-            var isVSCode = windowList.Where(hwnd => GetWindowText(hwnd).Contains("Visual Studio Code")).ToList();
+            var magicSearches = ScoringLogic.LoadMagicSearches();
+            var isVSCode = windowList.Where(hwnd => windowManager.GetWindowText(hwnd).Contains("Visual Studio Code")).ToList();
             var notVSCode = windowList.Except(isVSCode).ToList();
 
             if (onlyShowVSCode)
@@ -163,7 +86,7 @@ namespace vss
             if (string.IsNullOrEmpty(search))
             {
                 listBoxWindows.Items.Clear();
-                var winTitles = (isVSCode.Concat(notVSCode)).Select(hwnd => GetWindowText(hwnd)).Where(title => !string.IsNullOrEmpty(title)).ToList();
+                var winTitles = (isVSCode.Concat(notVSCode)).Select(hwnd => windowManager.GetWindowText(hwnd)).Where(title => !string.IsNullOrEmpty(title)).ToList();
                 if (winTitles.Contains(recent))
                 {
                     listBoxWindows.Items.Add(recent);
@@ -181,7 +104,7 @@ namespace vss
                 if (magicSearches.TryGetValue(search, out string magicSearch))
                 {
                     search = magicSearch;
-                    isVSCode = isVSCode.Where(hwnd => GetWindowText(hwnd).Contains(search)).ToList();
+                    isVSCode = isVSCode.Where(hwnd => windowManager.GetWindowText(hwnd).Contains(search)).ToList();
                 }
 
                 string[] keywords = Regex.Split(search.Replace('[', ' ').Replace(']', ' '), @"\s+");
@@ -189,11 +112,11 @@ namespace vss
 
                 foreach (IntPtr hwnd in isVSCode)
                 {
-                    int rcuScore = GetWindowText(hwnd) == recent ? 10 : 0;
-                    string searchTitle = RemoveVSCodePostfix(GetWindowText(hwnd));
-                    string origTitle = GetWindowText(hwnd);
+                    int rcuScore = windowManager.GetWindowText(hwnd) == recent ? 10 : 0;
+                    string searchTitle = ScoringLogic.RemoveVSCodePostfix(windowManager.GetWindowText(hwnd));
+                    string origTitle = windowManager.GetWindowText(hwnd);
                     int baseScore = keywords.Sum(keyword => Regex.IsMatch(searchTitle, keyword, RegexOptions.IgnoreCase) ? 1 : 0) * 100;
-                    int acronymScore = GetCharacterMatchScore(search, searchTitle) * 10;
+                    int acronymScore = ScoringLogic.GetCharacterMatchScore(search, searchTitle) * 10;
                     int score = baseScore + acronymScore + rcuScore;
                     scoreList.Add(new Tuple<int, string>(score, origTitle));
                 }
@@ -221,10 +144,10 @@ namespace vss
             if (selectedIndex >= 0 && selectedIndex < listBoxWindows.Items.Count)
             {
                 string title = listBoxWindows.Items[selectedIndex].ToString();
-                var window = windowList.FirstOrDefault(hwnd => GetWindowText(hwnd) == title);
+                var window = windowList.FirstOrDefault(hwnd => windowManager.GetWindowText(hwnd) == title);
                 if (window != IntPtr.Zero)
                 {
-                    SetTopWindow(window);
+                    windowManager.SetTopWindow(window);
                     recent = title;
                 }
             }
@@ -232,7 +155,7 @@ namespace vss
             Hide();
         }
 
-        private void ActivateWindow()
+        public void ActivateWindow()
         {
             UpdateWindowList();
             textBoxSearch.Text = "";
@@ -288,138 +211,5 @@ namespace vss
         {
             SwitchWindow(listBoxWindows.SelectedIndex);
         }
-
-        private int GetCharacterMatchScore(string search, string title)
-        {
-            var searchCounts = search.GroupBy(c => c).ToDictionary(gr => gr.Key, gr => gr.Count());
-            var titleCounts = title.GroupBy(c => c).ToDictionary(gr => gr.Key, gr => gr.Count());
-
-            int score = 0;
-            foreach (var kvp in searchCounts)
-            {
-                if (titleCounts.TryGetValue(kvp.Key, out int titleCount))
-                {
-                    score += Math.Min(kvp.Value, titleCount);
-                }
-            }
-            return score;
-        }
-
-        private string RemoveVSCodePostfix(string title)
-        {
-            string[] parts = title.Split(new[] { " - " }, StringSplitOptions.None);
-            if (parts.Length > 3)
-            {
-                parts = parts.Take(parts.Length - 2).ToArray();
-            }
-            else
-            {
-                parts = parts.Take(parts.Length - 1).ToArray();
-            }
-            return string.Join(" - ", parts);
-        }
-
-        #region Native Methods
-
-        private const int WM_HOTKEY = 0x0312;
-
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, int vk);
-
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
-
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-
-        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
-        private static extern int GetWindowTextLength(IntPtr hWnd);
-
-        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto, SetLastError = true)]
-        private static extern int GetWindowText(IntPtr hWnd, System.Text.StringBuilder lpString, int nMaxCount);
-
-        private static string GetWindowText(IntPtr hWnd)
-        {
-            int length = GetWindowTextLength(hWnd);
-            if (length == 0) return string.Empty;
-            StringBuilder sb = new StringBuilder(length + 1);
-            GetWindowText(hWnd, sb, sb.Capacity);
-            return sb.ToString();
-        }
-
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
-        private static extern bool IsWindowVisible(IntPtr hWnd);
-
-        [System.Runtime.InteropServices.DllImport("user32.dll", EntryPoint = "GetAncestor", SetLastError = true)]
-        private static extern IntPtr GetAncestor(IntPtr hwnd, uint gaFlags);
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-        private const int GWL_EXSTYLE = -20;
-        private const int WS_EX_TOOLWINDOW = 0x00000080;
-        private const int WS_EX_NOACTIVATE = 0x08000000;
-        private const uint GA_ROOTOWNER = 3;
-
-        private bool IsAltTabWindow(IntPtr hwnd)
-        {
-            if (!IsWindowVisible(hwnd)) return false;
-            if (GetAncestor(hwnd, GA_ROOTOWNER) != hwnd) return false;
-            int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-            if ((exStyle & WS_EX_TOOLWINDOW) != 0)
-                return false;
-            if ((exStyle & WS_EX_NOACTIVATE) != 0)
-                return false;
-
-            return true;
-        }
-
-        private IEnumerable<IntPtr> EnumerateWindows()
-        {
-            IntPtr hwnd = IntPtr.Zero;
-            while ((hwnd = FindWindowEx(IntPtr.Zero, hwnd, null, null)) != IntPtr.Zero)
-            {
-                yield return hwnd;
-            }
-        }
-
-        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
-        private static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string className, string windowTitle);
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr ProcessId);
-
-        [DllImport("kernel32.dll")]
-        private static extern uint GetCurrentThreadId();
-
-        [DllImport("user32.dll")]
-        private static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
-
-        [DllImport("user32.dll")]
-        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        [DllImport("user32.dll")]
-        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-
-        private const int SW_SHOWNORMAL = 1;
-        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-        private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
-        private const uint SWP_NOSIZE = 0x0001;
-        private const uint SWP_NOMOVE = 0x0002;
-        private bool SetTopWindow(IntPtr hWnd)
-        {
-            IntPtr hForeWnd = GetForegroundWindow();
-            uint dwForeID = GetWindowThreadProcessId(hForeWnd, IntPtr.Zero);
-            uint dwCurID = GetCurrentThreadId();
-            AttachThreadInput(dwCurID, dwForeID, true);
-            ShowWindow(hWnd, SW_SHOWNORMAL);
-            SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-            SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-            SetForegroundWindow(hWnd);
-            AttachThreadInput(dwCurID, dwForeID, false);
-            return true;
-        }
-        #endregion
     }
 }
