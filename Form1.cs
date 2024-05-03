@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using vss.Utils;
 
 namespace vss
 {
@@ -14,22 +15,19 @@ namespace vss
         private const uint MOD_ALT = 0x0001;
         private const int VK_SPACE = 0x20;
 
-        private string recent = "";
-        private List<IntPtr> windowList;
-        private bool onlyShowVSCode = true;
+        private MainController controller;
         private TaskbarManager taskbarManager;
-        private WindowManager windowManager;
+
+        public string SearchText => textBoxSearch.Text;
 
         public Form1()
         {
             InitializeComponent();
-            windowManager = new WindowManager();
-            windowList = windowManager.GetWindows();
-            UpdateList();
             CenterToScreen();
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
             taskbarManager = new TaskbarManager(this);
+            controller = new MainController(this);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -48,7 +46,7 @@ namespace vss
         {
             if (m.Msg == NativeInterop.WM_HOTKEY && m.WParam.ToInt32() == HotkeyId)
             {
-                ActivateWindow();
+                controller.ActivateWindow();
             }
             base.WndProc(ref m);
         }
@@ -63,102 +61,36 @@ namespace vss
             NativeInterop.UnregisterHotKey(Handle, HotkeyId);
         }
 
-        private void UpdateWindowList()
+        public void ClearWindowList()
         {
-            windowList = windowManager.GetWindows();
-            UpdateList();
+            listBoxWindows.Items.Clear();
         }
 
-
-
-        private void UpdateList()
+        public void AddWindowToList(string windowTitle)
         {
-            string search = textBoxSearch.Text;
-            var magicSearches = ScoringLogic.LoadMagicSearches();
-            var isVSCode = windowList.Where(hwnd => windowManager.GetWindowText(hwnd).Contains("Visual Studio Code")).ToList();
-            var notVSCode = windowList.Except(isVSCode).ToList();
+            listBoxWindows.Items.Add(windowTitle);
+        }
 
-            if (onlyShowVSCode)
-            {
-                notVSCode.Clear();
-            }
-
-            if (string.IsNullOrEmpty(search))
-            {
-                listBoxWindows.Items.Clear();
-                var winTitles = (isVSCode.Concat(notVSCode)).Select(hwnd => windowManager.GetWindowText(hwnd)).Where(title => !string.IsNullOrEmpty(title)).ToList();
-                if (winTitles.Contains(recent))
-                {
-                    listBoxWindows.Items.Add(recent);
-                }
-                foreach (string winTitle in winTitles)
-                {
-                    if (winTitle != recent)
-                    {
-                        listBoxWindows.Items.Add(winTitle);
-                    }
-                }
-            }
-            else
-            {
-                if (magicSearches.TryGetValue(search, out string magicSearch))
-                {
-                    search = magicSearch;
-                    isVSCode = isVSCode.Where(hwnd => windowManager.GetWindowText(hwnd).Contains(search)).ToList();
-                }
-
-                string[] keywords = Regex.Split(search.Replace('[', ' ').Replace(']', ' '), @"\s+");
-                var scoreList = new List<Tuple<int, string>>();
-
-                foreach (IntPtr hwnd in isVSCode)
-                {
-                    int rcuScore = windowManager.GetWindowText(hwnd) == recent ? 10 : 0;
-                    string searchTitle = ScoringLogic.RemoveVSCodePostfix(windowManager.GetWindowText(hwnd));
-                    string origTitle = windowManager.GetWindowText(hwnd);
-                    int baseScore = keywords.Sum(keyword => Regex.IsMatch(searchTitle, keyword, RegexOptions.IgnoreCase) ? 1 : 0) * 100;
-                    int acronymScore = ScoringLogic.GetCharacterMatchScore(search, searchTitle) * 10;
-                    int score = baseScore + acronymScore + rcuScore;
-                    scoreList.Add(new Tuple<int, string>(score, origTitle));
-                }
-
-                scoreList.Sort((x, y) => y.Item1.CompareTo(x.Item1));
-
-                listBoxWindows.Items.Clear();
-                foreach (var item in scoreList)
-                {
-                    if (item.Item1 > 0)
-                    {
-                        listBoxWindows.Items.Add(item.Item2);
-                    }
-                }
-            }
-
+        public void SelectFirstWindowInList()
+        {
             if (listBoxWindows.Items.Count > 0)
             {
                 listBoxWindows.SelectedIndex = 0;
             }
         }
 
-        private void SwitchWindow(int selectedIndex)
+        public void ClearSearchText()
         {
-            if (selectedIndex >= 0 && selectedIndex < listBoxWindows.Items.Count)
-            {
-                string title = listBoxWindows.Items[selectedIndex].ToString();
-                var window = windowList.FirstOrDefault(hwnd => windowManager.GetWindowText(hwnd) == title);
-                if (window != IntPtr.Zero)
-                {
-                    windowManager.SetTopWindow(window);
-                    recent = title;
-                }
-            }
             textBoxSearch.Text = "";
+        }
+
+        public void HideForm()
+        {
             Hide();
         }
 
-        public void ActivateWindow()
+        public void ShowForm()
         {
-            UpdateWindowList();
-            textBoxSearch.Text = "";
             Show();
             Activate();
             textBoxSearch.Focus();
@@ -166,18 +98,18 @@ namespace vss
 
         private void textBoxSearch_TextChanged(object sender, EventArgs e)
         {
-            UpdateList();
+            controller.UpdateList();
         }
 
         private void textBoxSearch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                SwitchWindow(listBoxWindows.SelectedIndex);
+                controller.SwitchWindow(listBoxWindows.SelectedIndex);
             }
             else if (e.KeyCode == Keys.Escape)
             {
-                Hide();
+                HideForm();
             }
             else if (e.KeyCode == Keys.Up)
             {
@@ -199,17 +131,17 @@ namespace vss
         {
             if (e.KeyCode == Keys.Enter)
             {
-                SwitchWindow(listBoxWindows.SelectedIndex);
+                controller.SwitchWindow(listBoxWindows.SelectedIndex);
             }
             else if (e.KeyCode == Keys.Escape)
             {
-                Hide();
+                HideForm();
             }
         }
 
         private void listBoxWindows_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            SwitchWindow(listBoxWindows.SelectedIndex);
+            controller.SwitchWindow(listBoxWindows.SelectedIndex);
         }
     }
 }

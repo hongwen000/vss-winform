@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace vss
+namespace vss.Utils
 {
     internal class WindowManager
     {
@@ -13,19 +13,19 @@ namespace vss
         private const int WS_EX_NOACTIVATE = 0x08000000;
         private const uint GA_ROOTOWNER = 3;
         private const int SW_SHOWNORMAL = 1;
-        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-        private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+        private static readonly nint HWND_TOPMOST = new nint(-1);
+        private static readonly nint HWND_NOTOPMOST = new nint(-2);
         private const uint SWP_NOSIZE = 0x0001;
         private const uint SWP_NOMOVE = 0x0002;
 
-        public List<IntPtr> GetWindows()
+        public List<nint> GetWindows()
         {
             return EnumerateWindows()
                 .Where(hwnd => IsAltTabWindow(hwnd) && NativeInterop.GetWindowTextLength(hwnd) > 0)
                 .ToList();
         }
 
-        private bool IsAltTabWindow(IntPtr hwnd)
+        private bool IsAltTabWindow(nint hwnd)
         {
             if (!NativeInterop.IsWindowVisible(hwnd)) return false;
             if (NativeInterop.GetAncestor(hwnd, GA_ROOTOWNER) != hwnd) return false;
@@ -38,19 +38,19 @@ namespace vss
             return true;
         }
 
-        private IEnumerable<IntPtr> EnumerateWindows()
+        private IEnumerable<nint> EnumerateWindows()
         {
-            IntPtr hwnd = IntPtr.Zero;
-            while ((hwnd = NativeInterop.FindWindowEx(IntPtr.Zero, hwnd, null, null)) != IntPtr.Zero)
+            nint hwnd = nint.Zero;
+            while ((hwnd = NativeInterop.FindWindowEx(nint.Zero, hwnd, null, null)) != nint.Zero)
             {
                 yield return hwnd;
             }
         }
 
-        public bool SetTopWindow(IntPtr hWnd)
+        public bool SetTopWindow(nint hWnd)
         {
-            IntPtr hForeWnd = NativeInterop.GetForegroundWindow();
-            uint dwForeID = NativeInterop.GetWindowThreadProcessId(hForeWnd, IntPtr.Zero);
+            nint hForeWnd = NativeInterop.GetForegroundWindow();
+            uint dwForeID = NativeInterop.GetWindowThreadProcessId(hForeWnd, nint.Zero);
             uint dwCurID = NativeInterop.GetCurrentThreadId();
             NativeInterop.AttachThreadInput(dwCurID, dwForeID, true);
             NativeInterop.ShowWindow(hWnd, SW_SHOWNORMAL);
@@ -61,7 +61,7 @@ namespace vss
             return true;
         }
 
-        public string GetWindowText(IntPtr hWnd)
+        public string GetWindowText(nint hWnd)
         {
             int length = NativeInterop.GetWindowTextLength(hWnd);
             if (length == 0) return string.Empty;
