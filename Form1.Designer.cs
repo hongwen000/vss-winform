@@ -28,41 +28,45 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxSearch = new System.Windows.Forms.TextBox();
-            this.listBoxWindows = new System.Windows.Forms.ListBox();
-            this.SuspendLayout();
+            textBoxSearch = new TextBox();
+            listBoxWindows = new ListBox();
+            SuspendLayout();
             // 
             // textBoxSearch
             // 
-            this.textBoxSearch.Location = new System.Drawing.Point(12, 12);
-            this.textBoxSearch.Name = "textBoxSearch";
-            this.textBoxSearch.Size = new System.Drawing.Size(260, 20);
-            this.textBoxSearch.TabIndex = 0;
-            this.textBoxSearch.TextChanged += new System.EventHandler(this.textBoxSearch_TextChanged);
-            this.textBoxSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSearch_KeyDown);
+            textBoxSearch.Location = new Point(22, 22);
+            textBoxSearch.Margin = new Padding(6, 6, 6, 6);
+            textBoxSearch.Name = "textBoxSearch";
+            textBoxSearch.Size = new Size(661, 30);
+            textBoxSearch.TabIndex = 0;
+            textBoxSearch.TextChanged += textBoxSearch_TextChanged;
+            textBoxSearch.KeyDown += textBoxSearch_KeyDown;
             // 
             // listBoxWindows
             // 
-            this.listBoxWindows.FormattingEnabled = true;
-            this.listBoxWindows.Location = new System.Drawing.Point(12, 38);
-            this.listBoxWindows.Name = "listBoxWindows";
-            this.listBoxWindows.Size = new System.Drawing.Size(260, 212);
-            this.listBoxWindows.TabIndex = 1;
-            this.listBoxWindows.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxWindows_KeyDown);
-            this.listBoxWindows.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBoxWindows_MouseDoubleClick);
+            listBoxWindows.Font = new Font("Microsoft YaHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            listBoxWindows.FormattingEnabled = true;
+            listBoxWindows.ItemHeight = 31;
+            listBoxWindows.Location = new Point(22, 70);
+            listBoxWindows.Margin = new Padding(6, 6, 6, 6);
+            listBoxWindows.Name = "listBoxWindows";
+            listBoxWindows.Size = new Size(661, 376);
+            listBoxWindows.TabIndex = 1;
+            listBoxWindows.KeyDown += listBoxWindows_KeyDown;
+            listBoxWindows.MouseDoubleClick += listBoxWindows_MouseDoubleClick;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Controls.Add(this.listBoxWindows);
-            this.Controls.Add(this.textBoxSearch);
-            this.Name = "Form1";
-            this.Text = "Window Switcher";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(698, 492);
+            Controls.Add(listBoxWindows);
+            Controls.Add(textBoxSearch);
+            Margin = new Padding(6, 6, 6, 6);
+            Name = "Form1";
+            Text = "Window Switcher";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

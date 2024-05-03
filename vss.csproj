@@ -11,5 +11,10 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
-
+    <PropertyGroup>
+	    <ApplicationManifest>app.manifest</ApplicationManifest>
+    </PropertyGroup>
+	<ItemGroup>
+		<None Include="app.manifest" />
+	</ItemGroup>
 </Project>
