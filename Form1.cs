@@ -23,7 +23,8 @@ namespace vss
         private List<IntPtr> windowList;
 
         private bool onlyShowVSCode = true;
-
+        private NotifyIcon notifyIcon;
+        private ContextMenuStrip trayMenu;
         public Form1()
         {
             InitializeComponent();
@@ -33,15 +34,45 @@ namespace vss
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
             // Create a taskbar icon
-            NotifyIcon notifyIcon = new NotifyIcon();
+            RegisterContextMenuStrip();
+
+            CreateTrayIcon();
+        }
+        private void CreateTrayIcon()
+        {
+            notifyIcon = new NotifyIcon();
             //notifyIcon.Icon = new Icon(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon.ico"));
             notifyIcon.Icon = CreateIcon();
             notifyIcon.Visible = true;
             notifyIcon.Text = "My Switcher Program";
             notifyIcon.DoubleClick += (sender, e) => ActivateWindow();
-
+            // Assign the context menu
+            notifyIcon.ContextMenuStrip = trayMenu;
             // Clean up the icon when the form is closed
             FormClosed += (sender, e) => notifyIcon.Dispose();
+        }
+        private void RegisterContextMenuStrip()
+        {
+            trayMenu = new ContextMenuStrip();
+            ToolStripMenuItem exitItem = new ToolStripMenuItem("Exit");
+            exitItem.Click += ExitItem_Click;
+            trayMenu.Items.Add(exitItem);
+
+            ToolStripMenuItem showItem = new ToolStripMenuItem("Show");
+            showItem.Click += ShowItem_Click;
+            trayMenu.Items.Add(showItem);
+        }
+
+        private void ExitItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void ShowItem_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.Activate();
         }
         private Icon CreateIcon()
         {
