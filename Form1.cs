@@ -106,10 +106,14 @@ namespace vss
             if (e.KeyCode == Keys.Enter)
             {
                 controller.SwitchWindow(listBoxWindows.SelectedIndex);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Escape)
             {
                 HideForm();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Up)
             {
@@ -132,10 +136,14 @@ namespace vss
             if (e.KeyCode == Keys.Enter)
             {
                 controller.SwitchWindow(listBoxWindows.SelectedIndex);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Escape)
             {
                 HideForm();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
         }
 
