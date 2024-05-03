@@ -17,7 +17,7 @@ namespace vss
 
         private string recent = "";
         private List<IntPtr> windowList;
-        private List<string> customTerms = new List<string> { "android-kernel-sunfish-msm-4.14-android11-qpr3", "yzy-r743", "r743", "ubuntu", "aosp_host_working_dir", "aosp", "apk", "androidtools", "vss" };
+
         private bool onlyShowVSCode = true;
 
         public Form1()
@@ -113,7 +113,7 @@ namespace vss
                     string searchTitle = RemoveVSCodePostfix(GetWindowText(hwnd));
                     string origTitle = GetWindowText(hwnd);
                     int baseScore = keywords.Sum(keyword => Regex.IsMatch(searchTitle, keyword, RegexOptions.IgnoreCase) ? 1 : 0) * 100;
-                    int acronymScore = GetAcronymScore(search, searchTitle) * 10;
+                    int acronymScore = GetCharacterMatchScore(search, searchTitle) * 10;
                     int score = baseScore + acronymScore + rcuScore;
                     scoreList.Add(new Tuple<int, string>(score, origTitle));
                 }
@@ -209,16 +209,20 @@ namespace vss
             SwitchWindow(listBoxWindows.SelectedIndex);
         }
 
-        private int GetAcronymScore(string search, string title)
+        private int GetCharacterMatchScore(string search, string title)
         {
-            string[] words = title.Split(' ');
-            title = string.Join(" ", words);
-            words = title.Split(' ').Where(x => x.Length > 0).ToArray();
-            var mapAcronymToWord = words.Select(word => new { Key = word[0], Value = word }).ToList();
-            char[] acronym = words.Select(word => word[0]).ToArray();
+            var searchCounts = search.GroupBy(c => c).ToDictionary(gr => gr.Key, gr => gr.Count());
+            var titleCounts = title.GroupBy(c => c).ToDictionary(gr => gr.Key, gr => gr.Count());
 
-            int matchedLength = search.Intersect(acronym).Count();
-            return matchedLength;
+            int score = 0;
+            foreach (var kvp in searchCounts)
+            {
+                if (titleCounts.TryGetValue(kvp.Key, out int titleCount))
+                {
+                    score += Math.Min(kvp.Value, titleCount);
+                }
+            }
+            return score;
         }
 
         private string RemoveVSCodePostfix(string title)
