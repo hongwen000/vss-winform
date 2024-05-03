@@ -6,6 +6,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.IO;
+using System.Drawing;
+using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace vss
 {
@@ -28,6 +32,35 @@ namespace vss
             CenterToScreen();
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
+            // Create a taskbar icon
+            NotifyIcon notifyIcon = new NotifyIcon();
+            //notifyIcon.Icon = new Icon(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon.ico"));
+            notifyIcon.Icon = CreateIcon();
+            notifyIcon.Visible = true;
+            notifyIcon.Text = "My Switcher Program";
+            notifyIcon.DoubleClick += (sender, e) => ActivateWindow();
+
+            // Clean up the icon when the form is closed
+            FormClosed += (sender, e) => notifyIcon.Dispose();
+        }
+        private Icon CreateIcon()
+        {
+            int size = 16;
+            Bitmap bitmap = new Bitmap(size, size);
+
+            using (Graphics graphics = Graphics.FromImage(bitmap))
+            {
+                // Set the background color
+                graphics.Clear(Color.White);
+
+                // Draw a black square
+                int padding = 2;
+                int squareSize = size - 2 * padding;
+                graphics.FillRectangle(Brushes.Black, padding, padding, squareSize, squareSize);
+            }
+
+            IntPtr hIcon = bitmap.GetHicon();
+            return Icon.FromHandle(hIcon);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -74,10 +107,20 @@ namespace vss
             UpdateList();
         }
 
+        private Dictionary<string, string> LoadMagicSearches()
+        {
+            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+            if (File.Exists(configPath))
+            {
+                string json = File.ReadAllText(configPath);
+                return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            }
+            return new Dictionary<string, string>();
+        }
         private void UpdateList()
         {
             string search = textBoxSearch.Text;
-
+            var magicSearches = LoadMagicSearches();
             var isVSCode = windowList.Where(hwnd => GetWindowText(hwnd).Contains("Visual Studio Code")).ToList();
             var notVSCode = windowList.Except(isVSCode).ToList();
 
@@ -104,6 +147,12 @@ namespace vss
             }
             else
             {
+                if (magicSearches.TryGetValue(search, out string magicSearch))
+                {
+                    search = magicSearch;
+                    isVSCode = isVSCode.Where(hwnd => GetWindowText(hwnd).Contains(search)).ToList();
+                }
+
                 string[] keywords = Regex.Split(search.Replace('[', ' ').Replace(']', ' '), @"\s+");
                 var scoreList = new List<Tuple<int, string>>();
 
