@@ -193,7 +193,7 @@ namespace vss
                 var window = windowList.FirstOrDefault(hwnd => GetWindowText(hwnd) == title);
                 if (window != IntPtr.Zero)
                 {
-                    SetForegroundWindow(window);
+                    SetTopWindow(window);
                     recent = title;
                 }
             }
@@ -353,7 +353,42 @@ namespace vss
 
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string className, string windowTitle);
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
 
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr ProcessId);
+
+        [DllImport("kernel32.dll")]
+        private static extern uint GetCurrentThreadId();
+
+        [DllImport("user32.dll")]
+        private static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        private const int SW_SHOWNORMAL = 1;
+        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+        private const uint SWP_NOSIZE = 0x0001;
+        private const uint SWP_NOMOVE = 0x0002;
+        private bool SetTopWindow(IntPtr hWnd)
+        {
+            IntPtr hForeWnd = GetForegroundWindow();
+            uint dwForeID = GetWindowThreadProcessId(hForeWnd, IntPtr.Zero);
+            uint dwCurID = GetCurrentThreadId();
+            AttachThreadInput(dwCurID, dwForeID, true);
+            ShowWindow(hWnd, SW_SHOWNORMAL);
+            SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+            SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+            SetForegroundWindow(hWnd);
+            AttachThreadInput(dwCurID, dwForeID, false);
+            return true;
+        }
         #endregion
     }
 }
