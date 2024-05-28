@@ -1,110 +1,129 @@
 ﻿using System.Text.RegularExpressions;
 using vss.Utils;
 using vss;
+using System.Diagnostics;
+using System.Reflection;
 
-public class MainController
+namespace vss
 {
-    private Form1 view;
-    private List<WindowModel> windows;
-    private List<WindowModel> filteredWindows;
-    private string recent = "";
-    private bool onlyShowVSCode = true;
-    private WindowManager windowManager;
-
-    public MainController(Form1 view)
+    public class MainController
     {
-        this.view = view;
-        windowManager = new WindowManager();
-        UpdateWindowList();
-    }
+        private Form1 view;
+        private List<WindowModel> windows;
+        private List<WindowModel> filteredWindows;
+        private string recent = "";
+        private bool onlyShowVSCode = true;
+        private WindowManager windowManager;
+        private string specialItem = "Open new VS Code window";
 
-    public void UpdateWindowList()
-    {
-        var windowHandles = windowManager.GetWindows();
-        windows = windowHandles.Select(hwnd => new WindowModel
+        public MainController(Form1 view)
         {
-            Handle = hwnd,
-            Title = windowManager.GetWindowText(hwnd)
-        }).ToList();
-        UpdateList();
-    }
-
-    public void UpdateList()
-    {
-        string search = view.SearchText;
-        var magicSearches = ScoringLogic.LoadMagicSearches();
-        filteredWindows = windows.Where(window => window.Title.Contains("Visual Studio Code")).ToList();
-        var notVSCode = windows.Except(filteredWindows).ToList();
-
-        if (onlyShowVSCode)
-        {
-            notVSCode.Clear();
+            this.view = view;
+            windowManager = new WindowManager();
+            UpdateWindowList();
         }
 
-        if (string.IsNullOrEmpty(search))
+        public void UpdateWindowList()
         {
-            var winTitles = (filteredWindows.Concat(notVSCode)).Select(window => window.Title).Where(title => !string.IsNullOrEmpty(title)).ToList();
-            view.ClearWindowList();
-            if (winTitles.Contains(recent))
+            var windowHandles = windowManager.GetWindows();
+            windows = windowHandles.Select(hwnd => new WindowModel
             {
-                view.AddWindowToList(recent);
+                Handle = hwnd,
+                Title = windowManager.GetWindowText(hwnd)
+            }).ToList();
+            UpdateList();
+        }
+
+        public void UpdateList()
+        {
+            string search = view.SearchText;
+            var magicSearches = ScoringLogic.LoadMagicSearches();
+            filteredWindows = windows.Where(window => window.Title.Contains("Visual Studio Code")).ToList();
+            var notVSCode = windows.Except(filteredWindows).ToList();
+
+            if (onlyShowVSCode)
+            {
+                notVSCode.Clear();
             }
-            foreach (string winTitle in winTitles)
+
+            if (string.IsNullOrEmpty(search))
             {
-                if (winTitle != recent)
+                var winTitles = (filteredWindows.Concat(notVSCode)).Select(window => window.Title).Where(title => !string.IsNullOrEmpty(title)).ToList();
+                view.ClearWindowList();
+                if (winTitles.Contains(recent))
                 {
-                    view.AddWindowToList(winTitle);
+                    view.AddWindowToList(recent);
+                }
+                foreach (string winTitle in winTitles)
+                {
+                    if (winTitle != recent)
+                    {
+                        view.AddWindowToList(winTitle);
+                    }
                 }
             }
-        }
-        else
-        {
-            if (magicSearches.TryGetValue(search, out string magicSearch))
+            else
             {
-                search = magicSearch;
-                filteredWindows = filteredWindows.Where(window => window.Title.Contains(search)).ToList();
-            }
-
-            string[] keywords = Regex.Split(search.Replace('[', ' ').Replace(']', ' '), @"\s+");
-            foreach (var window in filteredWindows)
-            {
-                int rcuScore = window.Title == recent ? 10 : 0;
-                string searchTitle = ScoringLogic.RemoveVSCodePostfix(window.Title);
-                int baseScore = keywords.Sum(keyword => Regex.IsMatch(searchTitle, keyword, RegexOptions.IgnoreCase) ? 1 : 0) * 100;
-                int acronymScore = ScoringLogic.GetCharacterMatchScore(search, searchTitle) * 10;
-                window.Score = baseScore + acronymScore + rcuScore;
-            }
-
-            filteredWindows = filteredWindows.OrderByDescending(window => window.Score).ToList();
-            view.ClearWindowList();
-            foreach (var window in filteredWindows)
-            {
-                if (window.Score > 0)
+                if (magicSearches.TryGetValue(search, out MagicSearch magicSearch))
                 {
-                    view.AddWindowToList(window.Title);
+                    search = magicSearch.ExpandedName;
+                    filteredWindows = filteredWindows.Where(window => window.Title.Contains(search)).ToList();
+                }
+
+                string[] keywords = Regex.Split(search.Replace('[', ' ').Replace(']', ' '), @"\s+");
+                foreach (var window in filteredWindows)
+                {
+                    int rcuScore = window.Title == recent ? 10 : 0;
+                    string searchTitle = ScoringLogic.RemoveVSCodePostfix(window.Title);
+                    int baseScore = keywords.Sum(keyword => Regex.IsMatch(searchTitle, keyword, RegexOptions.IgnoreCase) ? 1 : 0) * 100;
+                    int acronymScore = ScoringLogic.GetCharacterMatchScore(search, searchTitle) * 10;
+                    window.Score = baseScore + acronymScore + rcuScore;
+                }
+
+                filteredWindows = filteredWindows.OrderByDescending(window => window.Score).ToList();
+                view.ClearWindowList();
+                foreach (var window in filteredWindows)
+                {
+                    if (window.Score > 0)
+                    {
+                        view.AddWindowToList(window.Title);
+                    }
+                }
+
+                if (!filteredWindows.Any() && magicSearches.TryGetValue(view.SearchText, out magicSearch))
+                {
+                    view.AddWindowToList(specialItem);
                 }
             }
+
+            view.SelectFirstWindowInList();
         }
 
-        view.SelectFirstWindowInList();
-    }
-
-    public void SwitchWindow(int selectedIndex)
-    {
-        if (selectedIndex >= 0 && selectedIndex < filteredWindows.Count)
+        public void SwitchWindow(int selectedIndex, string window_name)
         {
-            var window = filteredWindows[selectedIndex];
-            windowManager.SetTopWindow(window.Handle);
-            recent = window.Title;
+            if (selectedIndex >= 0 && selectedIndex < filteredWindows.Count)
+            {
+                var window = filteredWindows[selectedIndex];
+                windowManager.SetTopWindow(window.Handle);
+                recent = window.Title;
+            }
+            else if (!filteredWindows.Any() && window_name == specialItem)
+            {
+                var magicSearches = ScoringLogic.LoadMagicSearches();
+                if (magicSearches.TryGetValue(view.SearchText, out MagicSearch magicSearch))
+                {
+                    Process.Start("cmd.exe", $"/c {magicSearch.Command}");
+                }
+            }
+            view.ClearSearchText();
+            view.HideForm();
         }
-        view.ClearSearchText();
-        view.HideForm();
-    }
 
-    public void ActivateWindow()
-    {
-        UpdateWindowList();
-        view.ClearSearchText();
-        view.ShowForm();
+        public void ActivateWindow()
+        {
+            UpdateWindowList();
+            view.ClearSearchText();
+            view.ShowForm();
+        }
     }
 }

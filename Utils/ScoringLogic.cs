@@ -35,7 +35,8 @@ namespace vss
             }
             return string.Join(" - ", parts);
         }
-        public static Dictionary<string, string> LoadMagicSearches()
+
+        public static Dictionary<string, MagicSearch> LoadMagicSearches()
         {
             string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
 
@@ -45,7 +46,7 @@ namespace vss
             }
 
             string json = File.ReadAllText(configPath);
-            return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            return JsonConvert.DeserializeObject<Dictionary<string, MagicSearch>>(json);
         }
         public static void ListEmbeddedResources()
         {
@@ -70,5 +71,13 @@ namespace vss
                 File.WriteAllText(outputPath, result);
             }
         }
+    }
+
+    public class MagicSearch
+    {
+        [JsonProperty("expanded_name")]
+        public string ExpandedName { get; set; }
+        [JsonProperty("command")]
+        public string Command { get; set; }
     }
 }

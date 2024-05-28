@@ -1,26 +1,98 @@
 {
-    "a": "aosp [SSH: r743]",
-    "k": "msm-google [SSH: r743]",
-    "g": "goldfish [SSH: r743]",
-    "t": "androidtools [SSH: r743]",
-    "h": "aosp_host_working_dir [SSH: r743]",
-    "ra": "aosp_r743",
-    "rs": "kernel-sunfish_r743",
-    "rg": "kernel-goldfish_r743",
-    "rt": "androidtools_r743",
-    "ua": "aosp [SSH: ubuntu]",
-    "uk": "msm-google [SSH: ubuntu]",
-    "ug": "kernel-goldfish_ubuntu",
-    "ut": "androidtools [SSH: ubuntu]",
-    "uh": "aosp_host_working_dir [SSH: ubuntu]",
-    "ya": "aosp [SSH: yzy-r743]",
-    "yk": "android-kernel-sunfish-msm-4.14-android11-qpr3 [SSH: yzy-r743]",
-    "yg": "kernel-goldfish_ubuntu",
-    "yt": "androidtools [SSH: yzy-r743]",
-    "yh": "aosp_host_working_dir [SSH: yzy-r743]",
-    "2a": "aosp [SSH: lxr2-r743]",
-    "2k": "android-kernel-sunfish-msm-4.14-android11-qpr3 [SSH: lxr2-r743]",
-    "2g": "kernel-goldfish_ubuntu",
-    "2t": "androidtools [SSH: lxr2-r743]",
-    "2h": "aosp_host_working_dir [SSH: lxr2-r743]"
+    "a": {
+        "expanded_name": "aosp [SSH: r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/aosp\""
+    },
+    "k": {
+        "expanded_name": "msm-google [SSH: r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/msm-google\""
+    },
+    "g": {
+        "expanded_name": "goldfish [SSH: r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/goldfish\""
+    },
+    "t": {
+        "expanded_name": "androidtools [SSH: r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/androidtools\""
+    },
+    "h": {
+        "expanded_name": "aosp_host_working_dir [SSH: r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+r743/~/aosp_host_working_dir\""
+    },
+    "ra": {
+        "expanded_name": "aosp_r743",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/aosp_r743\""
+    },
+    "rs": {
+        "expanded_name": "kernel-sunfish_r743",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/kernel-sunfish_r743\""
+    },
+    "rg": {
+        "expanded_name": "kernel-goldfish_r743",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/kernel-goldfish_r743\""
+    },
+    "rt": {
+        "expanded_name": "androidtools_r743",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/androidtools_r743\""
+    },
+    "ua": {
+        "expanded_name": "aosp [SSH: ubuntu]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+ubuntu/android/aosp\""
+    },
+    "uk": {
+        "expanded_name": "msm-google [SSH: ubuntu]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+ubuntu/android/msm-google\""
+    },
+    "ug": {
+        "expanded_name": "kernel-goldfish_ubuntu",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+ubuntu/android/kernel-goldfish\""
+    },
+    "ut": {
+        "expanded_name": "androidtools [SSH: ubuntu]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+ubuntu/android/androidtools\""
+    },
+    "uh": {
+        "expanded_name": "aosp_host_working_dir [SSH: ubuntu]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+ubuntu/~/aosp_host_working_dir\""
+    },
+    "ya": {
+        "expanded_name": "aosp [SSH: yzy-r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+yzy-r743/android/aosp\""
+    },
+    "yk": {
+        "expanded_name": "android-kernel-sunfish-msm-4.14-android11-qpr3 [SSH: yzy-r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+yzy-r743/android/android-kernel-sunfish-msm-4.14-android11-qpr3\""
+    },
+    "yg": {
+        "expanded_name": "kernel-goldfish_ubuntu",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+yzy-r743/android/kernel-goldfish\""
+    },
+    "yt": {
+        "expanded_name": "androidtools [SSH: yzy-r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+yzy-r743/android/androidtools\""
+    },
+    "yh": {
+        "expanded_name": "aosp_host_working_dir [SSH: yzy-r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+yzy-r743/~/aosp_host_working_dir\""
+    },
+    "2a": {
+        "expanded_name": "aosp [SSH: lxr2-r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+lxr2-r743/android/aosp\""
+    },
+    "2k": {
+        "expanded_name": "android-kernel-sunfish-msm-4.14-android11-qpr3 [SSH: lxr2-r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+lxr2-r743/android/android-kernel-sunfish-msm-4.14-android11-qpr3\""
+    },
+    "2g": {
+        "expanded_name": "kernel-goldfish_ubuntu",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+lxr2-r743/android/kernel-goldfish\""
+    },
+    "2t": {
+        "expanded_name": "androidtools [SSH: lxr2-r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+lxr2-r743/android/androidtools\""
+    },
+    "2h": {
+        "expanded_name": "aosp_host_working_dir [SSH: lxr2-r743]",
+        "command": "code.exe --folder-uri \"vscode-remote://ssh-remote+lxr2-r743/~/aosp_host_working_dir\""
+    }
 }

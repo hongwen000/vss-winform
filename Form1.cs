@@ -105,7 +105,7 @@ namespace vss
         {
             if (e.KeyCode == Keys.Enter)
             {
-                controller.SwitchWindow(listBoxWindows.SelectedIndex);
+                controller.SwitchWindow(listBoxWindows.SelectedIndex, listBoxWindows.GetItemText(listBoxWindows.SelectedItem));
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
@@ -135,7 +135,7 @@ namespace vss
         {
             if (e.KeyCode == Keys.Enter)
             {
-                controller.SwitchWindow(listBoxWindows.SelectedIndex);
+                controller.SwitchWindow(listBoxWindows.SelectedIndex, listBoxWindows.GetItemText(listBoxWindows.SelectedItem));
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
@@ -149,7 +149,7 @@ namespace vss
 
         private void listBoxWindows_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            controller.SwitchWindow(listBoxWindows.SelectedIndex);
+            controller.SwitchWindow(listBoxWindows.SelectedIndex, listBoxWindows.GetItemText(listBoxWindows.SelectedItem));
         }
     }
 }
