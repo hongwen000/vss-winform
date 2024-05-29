@@ -1,98 +1,98 @@
 {
   "a": {
-      "expanded_name": "aosp [SSH: r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/aosp\""
+    "expanded_name": "aosp [SSH: r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+r743/android/aosp"
   },
   "k": {
-      "expanded_name": "msm-google [SSH: r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/msm-google\""
+    "expanded_name": "msm-google [SSH: r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+r743/android/android-kernel-sunfish-msm-4.14-android11-qpr3/private/msm-google"
   },
   "g": {
-      "expanded_name": "goldfish [SSH: r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/goldfish\""
+    "expanded_name": "goldfish [SSH: r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+r743/android/goldfish"
   },
   "t": {
-      "expanded_name": "androidtools [SSH: r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+r743/home/lixr/repo/androidtools\""
+    "expanded_name": "androidtools [SSH: r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+r743/home/lixr/repo/androidtools"
   },
   "h": {
-      "expanded_name": "aosp_host_working_dir [SSH: r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+r743/~/aosp_host_working_dir\""
+    "expanded_name": "aosp_host_working_dir [SSH: r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+r743/~/aosp_host_working_dir"
   },
   "ra": {
-      "expanded_name": "aosp_r743",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/aosp_r743\""
+    "expanded_name": "aosp [SSH: r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+r743/android/aosp_r743"
   },
   "rs": {
-      "expanded_name": "kernel-sunfish_r743",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/kernel-sunfish_r743\""
+    "expanded_name": "kernel-sunfish [SSH: r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+r743/android/kernel-sunfish_r743"
   },
   "rg": {
-      "expanded_name": "kernel-goldfish_r743",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/kernel-goldfish_r743\""
+    "expanded_name": "kernel-goldfish [SSH: r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+r743/android/kernel-goldfish_r743"
   },
   "rt": {
-      "expanded_name": "androidtools_r743",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+r743/android/androidtools_r743\""
+    "expanded_name": "androidtools [SSH: r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+r743/android/androidtools_r743"
   },
   "ua": {
-      "expanded_name": "aosp [SSH: ubuntu]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+ubuntu/android/aosp\""
+    "expanded_name": "aosp [SSH: ubuntu]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+ubuntu/android/aosp"
   },
   "uk": {
-      "expanded_name": "msm-google [SSH: ubuntu]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+ubuntu/android/msm-google\""
+    "expanded_name": "msm-google [SSH: ubuntu]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+ubuntu/android/msm-google"
   },
   "ug": {
-      "expanded_name": "kernel-goldfish_ubuntu",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+ubuntu/android/kernel-goldfish\""
+    "expanded_name": "kernel-goldfish [SSH: ubuntu]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+ubuntu/android/kernel-goldfish"
   },
   "ut": {
-      "expanded_name": "androidtools [SSH: ubuntu]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+ubuntu/home/lixinrui/repo/androidtools\""
+    "expanded_name": "androidtools [SSH: ubuntu]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+ubuntu/home/lixinrui/repo/androidtools"
   },
   "uh": {
-      "expanded_name": "aosp_host_working_dir [SSH: ubuntu]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+ubuntu/~/aosp_host_working_dir\""
+    "expanded_name": "aosp_host_working_dir [SSH: ubuntu]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+ubuntu/~/aosp_host_working_dir"
   },
   "ya": {
-      "expanded_name": "aosp [SSH: yzy-r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+yzy-r743/android/aosp\""
+    "expanded_name": "aosp [SSH: yzy-r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+yzy-r743/android/aosp"
   },
   "yk": {
-      "expanded_name": "android-kernel-sunfish-msm-4.14-android11-qpr3 [SSH: yzy-r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+yzy-r743/android/android-kernel-sunfish-msm-4.14-android11-qpr3\""
+    "expanded_name": "android-kernel-sunfish-msm-4.14-android11-qpr3 [SSH: yzy-r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+yzy-r743/android/android-kernel-sunfish-msm-4.14-android11-qpr3"
   },
   "yg": {
-      "expanded_name": "kernel-goldfish_ubuntu",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+yzy-r743/android/kernel-goldfish\""
+    "expanded_name": "kernel-goldfish [SSH: yzy-r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+yzy-r743/android/kernel-goldfish"
   },
   "yt": {
-      "expanded_name": "androidtools [SSH: yzy-r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+yzy-r743/android/androidtools\""
+    "expanded_name": "androidtools [SSH: yzy-r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+yzy-r743/android/androidtools"
   },
   "yh": {
-      "expanded_name": "aosp_host_working_dir [SSH: yzy-r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+yzy-r743/~/aosp_host_working_dir\""
+    "expanded_name": "aosp_host_working_dir [SSH: yzy-r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+yzy-r743/~/aosp_host_working_dir"
   },
   "2a": {
-      "expanded_name": "aosp [SSH: lxr2-r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+lxr2-r743/android/aosp\""
+    "expanded_name": "aosp [SSH: lxr2-r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+lxr2-r743/android/aosp"
   },
   "2k": {
-      "expanded_name": "android-kernel-sunfish-msm-4.14-android11-qpr3 [SSH: lxr2-r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+lxr2-r743/android/android-kernel-sunfish-msm-4.14-android11-qpr3\""
+    "expanded_name": "android-kernel-sunfish-msm-4.14-android11-qpr3 [SSH: lxr2-r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+lxr2-r743/android/android-kernel-sunfish-msm-4.14-android11-qpr3"
   },
   "2g": {
-      "expanded_name": "kernel-goldfish_ubuntu",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+lxr2-r743/android/kernel-goldfish\""
+    "expanded_name": "kernel-goldfish [SSH: lxr2-r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+lxr2-r743/android/kernel-goldfish"
   },
   "2t": {
-      "expanded_name": "androidtools [SSH: lxr2-r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+lxr2-r743/android/androidtools\""
+    "expanded_name": "androidtools [SSH: lxr2-r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+lxr2-r743/android/androidtools"
   },
   "2h": {
-      "expanded_name": "aosp_host_working_dir [SSH: lxr2-r743]",
-      "command": "C:\\PROGRA~1\\MIFA7F~1\\Code.exe --folder-uri \"vscode-remote://ssh-remote+lxr2-r743/~/aosp_host_working_dir\""
+    "expanded_name": "aosp_host_working_dir [SSH: lxr2-r743]",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+lxr2-r743/~/aosp_host_working_dir"
   }
 }

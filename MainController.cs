@@ -33,7 +33,14 @@ namespace vss
             }).ToList();
             UpdateList();
         }
-
+        public static string EncodeParameterArgument(string original)
+        {
+            if (string.IsNullOrEmpty(original))
+                return original;
+            string value = Regex.Replace(original, @"(\\*)" + "\"", @"$1\$0");
+            value = Regex.Replace(value, @"^(.*\s.*?)(\\*)$", "\"$1$2$2\"");
+            return value;
+        }
         public void UpdateList()
         {
             string search = view.SearchText;
@@ -112,7 +119,9 @@ namespace vss
                 var magicSearches = ScoringLogic.LoadMagicSearches();
                 if (magicSearches.TryGetValue(view.SearchText, out MagicSearch magicSearch))
                 {
-                    Process.Start("cmd.exe", $"/c {magicSearch.Command}");
+                    string arg = $"-w Hidden -nop -noni -nol -c  {EncodeParameterArgument(magicSearch.Command)}";
+                    //arg = @"-c ""& 'C:\\Program Files\\Microsoft VS Code\\Code.exe'""";
+                    Process.Start("pwsh", arg);
                 }
             }
             view.ClearSearchText();
