@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using System.Diagnostics;
 using vss.Utils;
 
 namespace vss
@@ -150,6 +151,12 @@ namespace vss
         private void listBoxWindows_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             controller.SwitchWindow(listBoxWindows.SelectedIndex, listBoxWindows.GetItemText(listBoxWindows.SelectedItem));
+        }
+
+        private void configButton_Click(object sender, EventArgs e)
+        {
+            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+            Process.Start("explorer.exe", configPath);
         }
     }
 }

@@ -17,7 +17,11 @@
   },
   "h": {
     "expanded_name": "aosp_host_working_dir [SSH: r743]",
-    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+r743/~/aosp_host_working_dir"
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' --folder-uri vscode-remote://ssh-remote+r743/home/lixr/aosp_host_working_dir"
+  },
+  "lt": {
+    "expanded_name": "androidtools - Scripts",
+    "command": "& 'C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe' C:\\Users\\lixinrui\\repo\\androidtools"
   },
   "ra": {
     "expanded_name": "aosp [SSH: r743]",
