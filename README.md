@@ -13,37 +13,7 @@ VSCode Window Launcher是一个跨平台实用程序，帮助开发者快速定�
 
 要开始使用VSCode Window Launcher，请按照以下步骤进行操作：
 
-1. 克隆存储库：
-
-```
-git clone https://github.com/hongwen000/vss.git
-```
-
-2. 进入克隆的目录：
-
-```
-cd vss
-```
-
-3. 安装所需的依赖项：
-
-```
-pip install -r requirements.txt
-```
-
-4. 运行应用程序：
-
-```
-python main.py
-```
-
-5. 创建快捷方式：
-
-```
-python setup.py
-```
-
-这样，您就可以在桌面和开始菜单上创建VSCode Window Launcher的快捷方式。现在，您可以快速搜索和定位打开的VSCode窗口了。
+1. 点击右侧Release下载并安装
 
 ## 全局快捷键
 
@@ -81,37 +51,7 @@ VSCode Window Launcher is a cross-platform utility that helps developers quickly
 
 To get started with VSCode Window Launcher, follow these steps:
 
-1. Clone the repository:
-
-```
-git clone https://github.com/hongwen000/vss.git
-```
-
-2. Navigate to the cloned directory:
-
-```
-cd vss
-```
-
-3. Install the required dependencies:
-
-```
-pip install -r requirements.txt
-```
-
-4. Run the application:
-
-```
-python main.py
-```
-
-5. Create shortcuts:
-
-```
-python setup.py
-```
-
-This will create shortcuts for VSCode Window Launcher on your desktop and start menu. Now you can quickly search and locate open VSCode windows.
+1. Download Release from GitHub and click the Setup.exe
 
 ## Global Shortcut Key
 
